@@ -45,7 +45,16 @@
       <label class="form-check-label3" for="inlineCheckbox3">Independent</label>
     </div>
    
-    <!------------------------------------------------------------------------------------------->
+    <!---------we create menu desplegable--------------------------------------------------------------->
+    <div class="form-check form-check-inline">
+      <label>Filter by State:</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="menu">
+         <!-- we create the body with "my script"-->
+       </select> 
+    </div>
+  
     <!---- we create thetable-------------------------------------------------------------------->
     <table class="table table-striped table-bordered">
       <thead>
@@ -70,7 +79,7 @@
    <script>
   
 
-   // ------------- Función para saber cuales estan seleccionados----------------------
+   // ------------- Función para saber que Party esta seleccionado-----------------------------------------------------------------------------------------------------------------
    
    function checkboxes_selected(){
     const parties = {
@@ -115,6 +124,14 @@
    
    return result;
    }
+
+   // ------------- Función para saber que State esta seleccionado-----------------------------------------------------------------------------------------------------------------
+   function menu_selected(){
+     let state=document.getElementById("menu").value; 
+     // retorno la abreviación que es lo que se muestra en la tabla
+     return state; 
+   }
+
   </script>
   
   <!---Función para mostrar en pantalla----------------------------------------------------------------------->  
@@ -122,21 +139,34 @@
   const check1=document.getElementById("inlineCheckbox1");
   const check2=document.getElementById("inlineCheckbox2");
   const check3=document.getElementById("inlineCheckbox3");
+  const state=document.getElementById("menu");
  
-   import { fetchJson,makeMemberRows} from './scripts/html.js';
+   import { fetchJson,fetchJson2,makeStatesMenu,makeMemberRows} from './scripts/html.js';
+   
+   fetchJson2("states_titlecase.json")
+     .then ((datos)=>{ 
+      document.querySelector('#menu').innerHTML=makeStatesMenu(datos)
+     })
+    
+
    fetchJson("congress-senate.json")
      .then((datos)=>{
-      check1.addEventListener("click",checked)
-      check2.addEventListener("click",checked)
-      check3.addEventListener("click",checked)
-      function checked(){
-       document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected());
+     
+      function filter_table(){
+       menu_selected();
+       document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected(),menu_selected());
       }
-     checked();
-     //document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected());
-   })
+      menu.addEventListener("change",filter_table)
+      check1.addEventListener("click",filter_table)
+      check2.addEventListener("click",filter_table)
+      check3.addEventListener("click",filter_table)
+
+      filter_table();
     
-   
+    
+     })
+
+     
    </script>
    
   <footer>
