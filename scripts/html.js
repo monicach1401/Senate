@@ -18,15 +18,13 @@ if (max>0 && party.length==0){ // esta vacio, no hay nada seleccionado
   return contenido
 }
 
-console.log(result1.length,result2.length,result3.length)
-
 // ------  Filtro para Democrat 
 if (result1.length>0){ // esta seleccionado Democrat
   if (state.length==1){// state.length=1 significa que no hay ningun state seleccionado
     for(let i=0;i<max;i++){
       if(members[i].party=="D"){
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>
@@ -40,7 +38,7 @@ if (result1.length>0){ // esta seleccionado Democrat
       if(members[i].party=="D" && members[i].state==state){
         console.log('coinciden :',members[i].party,members[i].state,state)
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>
@@ -57,7 +55,7 @@ if (result2.length>0){ // esta seleccionado Republican
     for(let i=0;i<max;i++){
       if(members[i].party=="R"){
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>
@@ -71,7 +69,7 @@ if (result2.length>0){ // esta seleccionado Republican
       if(members[i].party=="R" && members[i].state==state){
         console.log('coinciden :',members[i].party,members[i].state,state)
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>
@@ -87,7 +85,7 @@ if (result3.length>0){ // esta seleccionado Independent
     for(let i=0;i<max;i++){
       if(members[i].party=="ID"){
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>
@@ -100,7 +98,7 @@ if (result3.length>0){ // esta seleccionado Independent
     for(let i=0;i<max;i++){
       if(members[i].party=="ID" && members[i].state==state){
         contenido += `<tr>
-        <td>${`<a href="${members[i].contact_form}">${members[i].last_name}`}</td>
+        <td>${`<a href="${members[i].url}">${members[i].last_name}`}</td>
         <td>${members[i].party}</td>
         <td>${members[i].state}</td>
         <td>${members[i].seniority}</td>

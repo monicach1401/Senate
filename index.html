@@ -1,140 +1,38 @@
 <!doctype html>
-
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/styles/senate.css">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/android-chrome-256x256.png">
-  <title>TGIF</title>
-</head>
-
-<body>
-  <div class="container">
-    <header>
-      <img src="/demo/logo.png" alt="Senate">
-     
-      <h1>Senators</h1>
-      <p>
-        First convened in 1789, the composition and powers of the Senate are established 
-        in Article One of the U.S. Constitution. Each state is represented by two senators, 
-        regardless of population, who serve staggered six-year terms. The Senate has 
-        several exclusive powers not granted to the House, including consenting to 
-        treaties as a precondition to their ratification and consenting to or confirming 
-        appointments of Cabinet secretaries, federal judges, other federal executive 
-        officials, military officers, regulatory officials, ambassadors, and other federal 
-        uniformed officers, as well as trial of federal officials impeached by the House.
-      </p>
-    </header>
-  
-    <!---- we create the checkboxes--------------------------------------------------------------->
-    <div class="form-check form-check-inline">
-      <label id="brown" class="form-check-label" for="inlineCheckbox1">Filter by Party: </label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" id="democratFilterCheckbox" value="D" checked > <!-- value => short name-->
-      <label class="form-check-label1" for="democratFilterCheckbox">Democrat</label> <!-- label = long name-->
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" id="republicanFilterCheckbox" value="R" checked>
-      <label class="form-check-label2" for="republicanFilterCheckbox">Republican</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="checkbox" id="independentFilterCheckbox" value="ID"checked >
-      <label class="form-check-label3" for="independentFilterCheckbox">Independent</label>
+  <head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/styles/senate.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/android-chrome-256x256.png">
+    <title>TGIF Home</title>
+  </head>
+  <header>
+    
+  </header>
+  <body>
+    <div class="container">
+      <div id="topLogo">
+        <img src="/logo.png" width="60" height="60">TGIF
+      </div>
+      
+      <div class="row justify-content-md-center">
+        <div class="col-sm-9">
+          <h1><br>About Us</h1>
+          Openness, accountability, and honesty define government transparency. In a free society, transparency is government's obligation to share information with citizens. It is at the heart of how citizens hold their public officials accountable. Here at TGIF we believe that government should be transparent.<br><br>
+          Governments exist to serve the people. Information on how officials conduct the public business and spend taxpayer money must be readily available and easily understood. This transparency allows good and just governance. Transparency promotes accountability and provides information for citizens about what their Government is doing.<br><br>
+          We also believe that government should be participatory. Public engagement enhances the Government's effectiveness and improves the quality of its decisions. Knowledge is widely dispersed in society, and public officials benefit from having access to that dispersed knowledge. We invite you to use our site to become actively engaged in American government.<br><br>
+          TGIF works to disclose information in forms that the public can readily find and use. We solicit public feedback to identify information of greatest use to the public.
+        </div>
+        <div class="col-sm-3">
+          <img id="myLogo"src="/tgif-home-image.png" alt="logo">
+        </div>
+      </div>
     </div>
    
-    <!---------we create menu desplegable--------------------------------------------------------------->
-    <div class="form-check form-check-inline">
-      <label id="brown">Filter by State:</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="menu">
-         <!-- we create the body with "my script"-->
-      </select> 
-    </div>
-  
-    <!---- we create thetable-------------------------------------------------------------------->
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr> 
-          <th>Name</th>
-          <th>Party</th>
-          <th>State</th>
-          <th>Years in Office</th>
-          <th>% Votes with Party</th>
-        </tr>
-      </thead>
-      <tbody id="mytable">
-       <!-- we create the body with "my script"-->
-      </tbody>
-    </table>
- 
-    <!-- script bootstrap --------------------------------------------------------------------->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script> 
-    
-    <script>
-    // ------------- Función para saber que Party esta seleccionado-----------------------------------------------------------------------------------------------------------------
-    function checkboxes_selected(){
-    const parties = {
-      democrat: 'D',
-      republican: 'R',
-      independent: 'ID'
-    }
-    let result=[];
-    if (document.querySelector('#democratFilterCheckbox').checked){  result.push(parties.democrat);  }
-    if (document.querySelector('#republicanFilterCheckbox').checked){  result.push(parties.republican);  }
-    if (document.querySelector('#independentFilterCheckbox').checked){  result.push(parties.independent);  }
-    return result;
-    }
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-     // ------------- Función para saber que State esta seleccionado-----------------------------------------------------------------------------------------------------------------
-    function menu_selected(){
-    let state=document.getElementById("menu").value; 
-     // retorno la abreviación que es lo que se muestra en la tabla
-    return state; 
-    }
-    </script>
-  
-    <!---Función para mostrar en pantalla----------------------------------------------------------------------->  
-    <script type="module">
-    const check1=document.getElementById("democratFilterCheckbox");
-    const check2=document.getElementById("republicanFilterCheckbox");
-    const check3=document.getElementById("independentFilterCheckbox");
-    const state=document.getElementById("menu");
- 
-    import { fetchJson,makeStatesMenu,makeMemberRows} from './scripts/html.js';
-   
-    fetchJson("states_titlecase.json")
-      .then ((datos)=>{
-        document.querySelector('#menu').innerHTML=makeStatesMenu(datos)
-      })
-    
-
-    fetchJson("congress-senate.json")
-      .then((datos)=>{
-        function filter_table(){
-          menu_selected();
-          document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected(),menu_selected());
-        }
-      menu.addEventListener("change",filter_table)
-      check1.addEventListener("click",filter_table)
-      check2.addEventListener("click",filter_table)
-      check3.addEventListener("click",filter_table)
-
-      filter_table();
-    })
-    </script>
-    <footer>
-      <p>&copy; 2021 TGIF | All Rights Reserved</p>
-    </footer>
-  </div>
-</body>
+  </body>
 </html>
-
-
-
-
-

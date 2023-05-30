@@ -1,20 +1,11 @@
-
-p{
-  font-style: italic
-  
-}  
-
-h1{
-  color:rgb(10, 10, 88);
-  font-size:60px;
+#myLogo{
+  margin-top: 150px;
 }
-
-#brown{
-  color:brown;
-  font-weight: 700;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+#topLogo{
+  margin-top: 45px;
+  font-size:xx-large;
 }
-
-
-
-  
+.myStyle {
+  background-color: coral;
+  padding: 16px;
+}
