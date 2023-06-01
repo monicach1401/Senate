@@ -1,11 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/android-chrome-256x256.png">
-    <title>TGIF Home</title>
+    <title>TGIF Attendance</title>
   </head>
   <header>
     <!-- Navigation -->
@@ -40,7 +40,7 @@
                 </ul>
               </li>
               <li class="nav-item dropdown"> <!-- indicamos que este item va a contener otro menu-->
-                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownAttendance" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                  Attendance
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -62,37 +62,62 @@
         </div>    
       </nav>
   </header>
-<body style="background-color: beige"> <!-- bootstrap- Sección card- Superposición de Imagenes -->
-  <div class="container">
-    <div class="card" >
-      <img src="/images/img_home.jpg" class="card-img-top" alt="home"style="margin-top:70px;">
-      <div class="card-body"style="background-color: beige">
-        <h2 class="card-title">About US</h2>
-        <p class="card-text">
-          Openness, accountability, and honesty define government transparency. In a free society, transparency is government's obligation to share information with citizens. It is at the heart of how citizens hold their public officials accountable. Here at TGIF we believe that government should be transparent.<br>
-          Governments exist to serve the people. Information on how officials conduct the public business and spend taxpayer money must be readily available and easily understood. This transparency allows good and just governance. Transparency promotes accountability and provides information for citizens about what their Government is doing.<br>
-          We also believe that government should be participatory. Public engagement enhances the Government's effectiveness and improves the quality of its decisions. Knowledge is widely dispersed in society, and public officials benefit from having access to that dispersed knowledge. We invite you to use our site to become actively engaged in American government.<br>
-          TGIF works to disclose information in forms that the public can readily find and use. We solicit public feedback to identify information of greatest use to the public.
-        </p>
-      </div>
-    </div>
-  </div>  
-  </div>
+<body style="background-color: beige">
+  <div class="container">    
+    <h1 style="margin-top: 80px;">Attendance</h1>
+    <p>
+    The Constitution specifies that a majority of members constitutes a quorum 
+    to do business in each house. Representatives and senators rarely force the 
+    presence of a quorum by demanding quorum calls; thus, in most cases, debates 
+    continue even if a majority is not present.
+    </p>
+    <p>The Senate uses roll-call votes; a clerk calls out the names of all the 
+    senators, each senator stating "aye" or "no" when his or her name is announced.
+    The House reserves roll-call votes for the most formal matters, as a roll-call
+    of all 435 representatives takes quite some time; normally, members vote by
+    electronic device. In the case of a tie, the motion in question fails. In the Senate,
+    the Vice President may (if present) cast the tiebreaking vote.
+    </p>
+    <h2 id="textAttendanceSenate">Senate at a Glance</h2>
+    <h2 id="textAttendanceHouse">House at a Glance</h2>
+    <h2>Least Engaged (Bottom 10% Attendance)</h2>
+    <h2>Most Engaged (Top 10% Attendance)</h2>
+ 
   
-  
-     
-   
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- script bootstrap --------------------------------------------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script> 
     <script>
       activeCurrentLink()
-
       // función para activar la página en la que estamos//
       function activeCurrentLink(){
-        var element=window.document.querySelector('.nav-link') 
-        element.classList.toggle("active")
+        console.log(window.location.href)
+        var element=window.document.querySelector('#navbarDropdownAttendance') // le indicamos que estamos en Congress
+        element.classList.toggle("active") 
+      } 
+
+      // debemos saber que chamber hemos puesto en la URL
+      const params = new URL(document.location).searchParams;
+      const chamber=params.get("chamber")
+      console.log('la variable chamber es:',chamber) // le pasamos como parametro el chamber 
+
+      selectChamberandChangetheText(chamber);  // llamamos a la función para saber que chamber hemos puesto
+
+      function selectChamberandChangetheText(chamber){
+      let file='';
+      if(chamber=="house"){ // debemos coger los datos de "congress-117-house.json y ocultar texto de Senate"
+        document.querySelector('#textAttendanceSenate').style.display="none";
+        //file="/data/congress-117-house.json";
       }
-    
-    </script>
+      else// debemos coger los datos de "congress-117-senate.json y ocultar texto de House"
+      {
+        document.querySelector('#textAttendanceHouse').style.display="none";
+        //file="/data/congress-117-senate.json";
+      }
+      
+      //return file; // nos devuelve el fichero que debemos pasar al fetchJson
+    }
+    </script> 
+  </div>  
 </body>
 </html>
