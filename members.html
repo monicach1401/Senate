@@ -69,7 +69,7 @@
     <div id="textSenate">
       <div class="row">
         <div class="col">
-          <img class="img-fluid"src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
+          <img src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
         </div>
         <div class="col"> 
           <h1 class="fw-bold"style="margin-top: 70px;margin-bottom:5px">Senators</h1>
@@ -233,6 +233,12 @@
 
     fetchJson(fileJson)
       .then((datos)=>{
+        addnewObject(datos) // añadimos un nuevo objecto 
+        function addnewObject(){
+         datos.senate=new Object();
+         datos.house =new Object();
+         console.log(datos)
+        }
         function filter_table(){
           menu_selected();
           console.log('checked',checkboxes_selected())
