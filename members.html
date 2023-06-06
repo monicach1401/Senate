@@ -69,7 +69,7 @@
     <div id="textSenate">
       <div class="row">
         <div class="col">
-          <img src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
+          <img class="img-fluid"src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
         </div>
         <div class="col"> 
           <h1 class="fw-bold"style="margin-top: 70px;margin-bottom:5px">Senators</h1>
@@ -204,8 +204,10 @@
     fetchJson("/data/states_titlecase.json")
       .then ((datos)=>{
         document.querySelector('#menu').innerHTML=makeStatesMenu(datos)
-      })
+     })
+
     
+      
     
     // debemos saber que chamber hemos puesto en la URL
     const params = new URL(document.location).searchParams;
@@ -230,28 +232,24 @@
     
     let fileJson=selectChamberandChangetheText(chamber)
     console.log('el parametro que pasamos es',fileJson)
-
+    
+    
     fetchJson(fileJson)
       .then((datos)=>{
-        addnewObject(datos) // añadimos un nuevo objecto 
-        function addnewObject(){
-         datos.senate=new Object();
-         datos.house =new Object();
-         console.log(datos)
-        }
         function filter_table(){
-          menu_selected();
-          console.log('checked',checkboxes_selected())
-          document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected(),menu_selected());
-        }
+        menu_selected();
+        document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected(),menu_selected());
+      }
+       
       menu.addEventListener("change",filter_table)
       check1.addEventListener("click",filter_table)
       check2.addEventListener("click",filter_table)
       check3.addEventListener("click",filter_table)
-
       filter_table();
-    })
-
+     
+      })
+    
+    
     </script>
     <footer>
       <p>&copy; 2021 TGIF | All Rights Reserved</p>
