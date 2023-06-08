@@ -70,8 +70,8 @@
       and strong Republicans respectively, tend to be the most faithful in 
       voting for their party's nominee for office and legislation that backs 
       their party's agenda.
-    <h2 id="textLoyaltySenate">House at a Glance</h2>
     <h2 id="textLoyaltySenate">Senate at a Glance</h2>
+    <h2 id="textLoyaltyHouse">House at a Glance</h2>
     <h2>Least Loyal (Bottom 10% of Party)</h2>
     <h2>Most Loyal (Top 10% of Party)</h2>
     
@@ -98,7 +98,7 @@
       selectChamberandChangetheText(chamber);  // llamamos a la función para saber que chamber hemos puesto
 
       function selectChamberandChangetheText(chamber){
-      let file='';
+      //let file='';
       if(chamber=="house"){ // debemos coger los datos de "congress-117-house.json y ocultar texto de Senate"
         document.querySelector('#textLoyaltySenate').style.display="none";
         //file="/data/congress-117-house.json";
