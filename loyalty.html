@@ -72,8 +72,88 @@
       their party's agenda.
     <h2 id="textLoyaltySenate">Senate at a Glance</h2>
     <h2 id="textLoyaltyHouse">House at a Glance</h2>
-    <h2>Least Loyal (Bottom 10% of Party)</h2>
+    
+    <table class="table table-striped table-bordered ">
+      <thead>
+        <tr  style="background-color:gray">
+          <th>Party</th>
+          <th>Number of Reps</th>
+          <th>% Voted with Party</th>
+        </tr>
+      </thead>
+      <tbody id="myTableLoyalty">
+        <tr><!-- 1ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 2ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 3ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h2><br>Least Loyal (Bottom 10% of Party)</h2>
+    <table class="table table-striped table-bordered ">
+      <thead>
+        <tr  style="background-color:gray">
+          <th>Name</th>
+          <th>Number Party Votes</th>
+          <th>% Party Votes</th>
+        </tr>
+      </thead>
+      <tbody  id="tableLeastLoyal">
+        <tr><!-- 1ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 2ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 3ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
     <h2>Most Loyal (Top 10% of Party)</h2>
+    <table class="table table-striped table-bordered ">
+      <thead>
+        <tr  style="background-color:gray">
+          <th>Name</th>
+          <th>Number Party Votes</th>
+          <th>% Party Votes</th>
+        </tr>
+      </thead>
+      <tbody id="tableMostLoyal">
+        <tr><!-- 1ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 2ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr><!-- 3ª fila -->
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
     
     
  
@@ -81,7 +161,8 @@
     <!-- script bootstrap --------------------------------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script> 
-    <script>
+    <script  type="module">
+      import {fetchJson,calcStatistics,makeLoyalRows,makeLeastLoyalRows,makeMostLoyalRows} from './scripts/html.js';
       activeCurrentLink()
       // función para activar la página en la que estamos//
       function activeCurrentLink(){
@@ -98,19 +179,28 @@
       selectChamberandChangetheText(chamber);  // llamamos a la función para saber que chamber hemos puesto
 
       function selectChamberandChangetheText(chamber){
-      //let file='';
-      if(chamber=="house"){ // debemos coger los datos de "congress-117-house.json y ocultar texto de Senate"
-        document.querySelector('#textLoyaltySenate').style.display="none";
-        //file="/data/congress-117-house.json";
+        let file='';
+        if(chamber=="house"){ // debemos coger los datos de "congress-117-house.json y ocultar texto de Senate"
+          document.querySelector('#textLoyaltySenate').style.display="none";
+          file="/data/congress-117-house.json";
+        }
+        else// debemos coger los datos de "congress-117-senate.json y ocultar texto de House"
+        {
+          document.querySelector('#textLoyaltyHouse').style.display="none";
+          file="/data/congress-117-senate.json";
+        }
+        return file; // nos devuelve el fichero que debemos pasar al fetchJson
       }
-      else// debemos coger los datos de "congress-117-senate.json y ocultar texto de House"
-      {
-        document.querySelector('#textLoyaltyHouse').style.display="none";
-        //file="/data/congress-117-senate.json";
-      }
-      
-      //return file; // nos devuelve el fichero que debemos pasar al fetchJson
-    }
+
+      let fileJson=selectChamberandChangetheText(chamber);
+             
+      fetchJson(fileJson)
+      .then((datos)=>{
+        calcStatistics (datos); // creamos los nuevos objetos y nos calcula los miembros de cada partido
+        document.querySelector('#myTableLoyalty').innerHTML=makeLoyalRows(datos) 
+        document.querySelector('#tableLeastLoyal').innerHTML=makeLeastLoyalRows(datos) 
+        document.querySelector('#tableMostLoyal').innerHTML=makeMostLoyalRows(datos) 
+      })
     </script> 
   </div>  
 </body>

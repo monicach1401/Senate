@@ -1,10 +1,8 @@
 
-// Función obtener datos del Senado
-
+// Función obtener datos del fichero Json
 function fetchJson(file){
   return fetch(file).then (response=>response.json());
 }
-
 
 // Función para generar las filas de miembros basadas en los datos JSON recibidos
 function makeMemberRows(datos,party,state){
@@ -114,7 +112,6 @@ return contenido
 }
 
 //función que crea el menu dropdown de los estados
-
 function makeStatesMenu(datos){
   let contenido=''
   const max=datos.length;
@@ -126,276 +123,299 @@ function makeStatesMenu(datos){
   return contenido
 }
 
-// función para crear los nuevos objetos dentro del fichero Json
+// función para crear los nuevos objetos y nos calcula todas las estadisticas
 function calcStatistics (datos)
 {
-  // creamos estructura de Senate
+
   const senate={
       statistics:{
         counts:{
-          "Democrat":0,
-          "Republican":0,
-          "Independent":0
+          Democrat:0,
+          Republican:0,
+          Independent:0
         },
         missed:{},
-        least_names:[],
-        least_votes:[],
-        least_missed:[]
-    }
+        least_missed:[],
+        most_missed:[],
+        loyalty:{},
+        least_loyalty:[],
+        most_loyalty:[]
+     }
   }
-  
- 
-  // creamos estructura de House
+
   const house={
     statistics:{
       counts:{
-        "Democrat":0,
-        "Republican":0,
-        "Independent":0
+        Democrat:0,
+        Republican:0,
+        Independent:0
       },
       missed:{},
-      least_names:[],
-      least_votes:[],
-      least_missed:[]
+      least_missed:[],
+      most_missed:[],
+      loyalty:{},
+      least_loyalty:[],
+      most_loyalty:[]
     }
   }
 
   datos.senate=senate;
   datos.house=house;
-    
-  // declaramos variables 
+
   const members=datos.results[0].members;
   const max=datos.results[0].members.length; 
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  let chamber_counts=datos[chamber].statistics.counts;
+  let chamber_missed=datos[chamber].statistics.missed;
+  let chamber_least_missed=datos[chamber].statistics.least_missed;
+  let chamber_most_missed=datos[chamber].statistics.most_missed;
+  let chamber_loyalty=datos[chamber].statistics.loyalty;
+  let chamber_least_loyalty=datos[chamber].statistics.least_loyalty;
+  let chamber_most_loyalty=datos[chamber].statistics.most_loyalty;
+  
  
-  const partysSenate=datos.senate.statistics.counts
-  const partysHouse=datos.house.statistics.counts
 
-  let chamber = datos.results[0].chamber;
-  console.log('el chamber es',chamber)
-  //const party=datos[chamber].statistics.counts
-  //console.log('la variable party seria',party)
-  
-
-  
-
+  // calculamos el total de miembros de cada partido y lo guardamos en chamber.statistics.counts
   let totalD=0;
   let totalR=0;
   let totalID=0;
   
-
-  // hemos elegido Senate--------------------------------------------------
-  if (datos.results[0].chamber=="Senate"){ 
-    for(let i=0;i<max;i++){
-      if(members[i].party=="D"){
-        totalD=totalD+1;
-        partysSenate.Democrat=totalD; // ponemos el total en el objecto 
-      }else if(members[i].party=="R"){
-        totalR=totalR+1;
-        partysSenate.Republican=totalR; 
-        }else{
-          totalID=totalID+1;
-          partysSenate.Independent=totalID; 
-        }
-    }
-  }else{ // hemos elegido House
-    for(let i=0;i<max;i++){
-      if(members[i].party=="D"){
-        totalD=totalD+1;
-        partysHouse.Democrat=totalD; // ponemos el total en el objecto 
-      }else if(members[i].party=="R"){
-        totalR=totalR+1;
-        partysHouse.Republican=totalR; 
-        }else{
-          totalID=totalID+1;
-          partysHouse.Independent=totalID; 
-         }
-    }
-  } 
-}
-
-
-
-// función que obtenemos los valores guardados en los objectos nuevos y devolvemos el contenido para crear la tabla
-function makeCountRows(datos){
-  // obtenemos todos los datos del objecto nuevo Senate
-  const countsSenate=datos.senate.statistics.counts; 
-  const missedSenate=datos.senate.statistics.missed;
-  const partysSenate=Object.keys(countsSenate); // guardamos las propiedades que son los nombres de los partidos
-  const numberOfRepsSenate=Object.values(countsSenate);// guardamos los valores que son los calculos
-  const votedSenate=Object.values(missedSenate);
-
-  // obtenemos todos los datos del objecto nuevo House
-  const countsHouse=datos.house.statistics.counts; 
-  const missedHouse=datos.house.statistics.missed;
-  const partysHouse=Object.keys(countsHouse); 
-  const numberOfRepsHouse=Object.values(countsHouse);
-  const votedHouse=Object.values(missedHouse);
-  
- 
-  let contenido=''
- 
-  if (datos.results[0].chamber=="Senate"){ //hemos elegido Senate
-    for(let i=0;i<3;i++){
-      contenido+= `<tr>
-      <td>${partysSenate[i]}</td>
-      <td>${numberOfRepsSenate[i]}</td>
-      <td>${votedSenate[i]}</td>
-      </tr>`
-    }
-  }else{// hemos elegido House
-    for(let i=0;i<3;i++){
-      contenido+= `<tr>
-      <td>${partysHouse[i]}</td>
-      <td>${numberOfRepsHouse[i]}</td>
-      <td>${votedHouse[i]}</td>
-      </tr>`
-    }  
-
+  for(let i=0;i<max;i++){
+    if(members[i].party=="D"){
+      totalD=totalD+1;
+      chamber_counts.Democrat=totalD; 
+    }else if(members[i].party=="R"){
+      totalR=totalR+1;
+      chamber_counts.Republican=totalR; 
+      }else{
+        totalID=totalID+1;
+        chamber_counts.Independent=totalID; 
+      }
   }
-  return contenido
-  } 
-
-// función que nos calcula el % de los missed voted y guarda el rdo en el objecto  
-function makeMissedVoteRows(datos){
-  const members=datos.results[0].members;
-  const max=datos.results[0].members.length;
-  const missedSenate=datos.senate.statistics.missed;
-  const missedHouse=datos.house.statistics.missed;
-  let totalmissedSenate=0;
-  let totalmissedHouse=0;
+ 
+  // calculamos el total de missed y lo guardamos en chamber.statistics.missed
+ 
+  let totalmissed=0;
   let totalDemocratMissed=0;
   let totalRepublicanMissed=0;
   let totalIndependentMissed=0;
-  console.log(datos)
-
-  // hemos elegido Senate--------------------------------------------------
-  if (datos.results[0].chamber=="Senate"){ 
-    for(let i=0;i<max;i++){
-      if (members[i].party=="D"){
-        totalDemocratMissed= totalDemocratMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "D"
-      }else if(members[i].party=="R"){
-        totalRepublicanMissed=totalRepublicanMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "R"
-      }else{
-        totalIndependentMissed=totalIndependentMissed  +(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "ID"
-      }
-    }  
-    // calculamos el %
-    totalmissedSenate=totalDemocratMissed + totalRepublicanMissed + totalIndependentMissed;
-    missedSenate.Democrat=((totalDemocratMissed*100)/totalmissedSenate).toFixed(2);    // ponemos el valor en el objecto y lo rendondeamos
-    missedSenate.Republican=((totalRepublicanMissed*100)/totalmissedSenate).toFixed(2) ;
-    missedSenate.Independent=((totalIndependentMissed*100)/totalmissedSenate).toFixed(2) ;
-
-  }else{ // hemos elegido House
-    for(let i=0;i<max;i++){
-      if (members[i].party=="D"){
-        totalDemocratMissed= totalDemocratMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "D"
-      }else if(members[i].party=="R"){
-        totalRepublicanMissed=totalRepublicanMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "R"
-      }else{
-        totalIndependentMissed=totalIndependentMissed  +(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "ID"
-      }
-    }  
-    // calculamos el %
-    totalmissedHouse=totalDemocratMissed + totalRepublicanMissed + totalIndependentMissed;
-    missedHouse.Democrat=((totalDemocratMissed*100)/totalmissedHouse).toFixed(2);    // ponemos el valor en el objecto y lo rendondeamos
-    missedHouse.Republican=((totalRepublicanMissed*100)/totalmissedHouse).toFixed(2) ;
-    missedHouse.Independent=((totalIndependentMissed*100)/totalmissedHouse).toFixed(2) ;
-
-  }
- }
-
-// función para calcular "least engaged", los que tienen mas  missed_votes , ordenados descendente 
-function leastEngaged(datos){
-  const maxMembers=datos.results[0].members.length;
-  const members=datos.results[0].members;
-  let missedVotes=[];
-  let names=[];
-  let missed=[];
   let maxMissedVotes=0;
-  let x=0;
 
-  // obtenemos la lista de todos los missed_votes 
-  for ( let i=0;i<maxMembers;i++){
-    missedVotes[i] =members[i].missed_votes;
-    maxMissedVotes=maxMissedVotes+missedVotes[i];
-  }
-  console.log('la suma total de missed votes',maxMissedVotes)
-  console.log('lista inicial de votes ',missedVotes)
-  console.log('la longitud inicial es',missedVotes.length)
+  let totalDemocratLoyalty=0;
+  let totalRepublicanLoyalty=0;
+  let totalIndepedentLoyalty=0;
+  let totalLoyalty=0;
+  let maxAgainstVotes=0;
+  let maxWithVotes=0;
 
-  // ordenamos descendente  y eliminamos los elementos null y los 0 con filter
-  missedVotes=((missedVotes.sort(function(a,b){return b-a})).filter(element => element != null)).filter(element => element > 0) 
-  console.log( 'la nueva longitud eliminando los nulls es',missedVotes.length)
-
-  // aqui los dice el maximo de item que tenemos que mostrar , solo el 10%
-  missedVotes=missedVotes.slice(0,Math.round(missedVotes.length/10));
-
-  // en la lista ponemos solo estos
-  console.log('la nueva lista es ',missedVotes);
   
-  // tenemos que buscar a que member pertenecen estos votos
-  for ( let i=0;i<missedVotes.length;i++){ // recorremos la lista final
-    let num=missedVotes[i]
-    for( let i=0;i<maxMembers;i++ ){ // buscamos el valor de missed_votes en members para obtener el nombre
-      if(members[i].missed_votes == num ){
-        if ( (names.includes(members[i].last_name)) == false ){
-          names.push(members[i].last_name)
-        }
+ // en el total de miembros sumamos los missed_votes y votes_with_party_pct y creamos las listas de least y most
+  for( let i=0;i<max;i++){
+
+    if (members[i].party=="D"){
+      totalDemocratMissed= totalDemocratMissed+(members[i].missed_votes); //vamos sumando los missed_votes de todos los miembros "D"
+      if (members[i].votes_with_party_pct == undefined){members[i].votes_with_party_pct=0} // si alguno tiene valor Nan, le ponemos "0"
+      totalDemocratLoyalty = totalDemocratLoyalty+(members[i].votes_with_party_pct);//vamos sumando los votes_with_party_pct de todos los miembros "D"
+    }else if(members[i].party=="R"){
+      totalRepublicanMissed=totalRepublicanMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "R"
+      if (members[i].votes_with_party_pct == undefined){members[i].votes_with_party_pct=0} // si alguno tiene valor Nan, le ponemos "0"
+      totalRepublicanLoyalty = totalRepublicanLoyalty+(members[i].votes_with_party_pct);//vamos sumando los votes_with_party_pct de todos los miembros "R"
+      }else{
+        totalIndependentMissed=totalIndependentMissed+(members[i].missed_votes);// vamos sumando los missed_votes de todos los miembros "ID"
+        if (members[i].votes_with_party_pct == undefined){members[i].votes_with_party_pct=0} // si alguno tiene valor Nan, le ponemos "0"
+        totalIndepedentLoyalty = totalIndepedentLoyalty+(members[i].votes_with_party_pct);//vamos sumando los votes_with_party_pct de todos los miembros "ID"
       }
-    }
-  } 
+
+    // creamos las listas LEAST Y MOST 
+    chamber_least_missed[i]=new Object();
+    chamber_least_missed[i].name=members[i].last_name;
+    chamber_least_missed[i].votes=members[i].missed_votes;
+    chamber_most_missed[i]=new Object();
+    chamber_most_missed[i].name=members[i].last_name;
+    chamber_most_missed[i].votes=members[i].missed_votes;
+    maxMissedVotes= maxMissedVotes+members[i].missed_votes;
+    
+    chamber_least_loyalty[i]=new Object();
+    chamber_least_loyalty[i].name=members[i].last_name;
+    
+    // cuando el valor es undefined, le ponemos el valor 0 para que se pueda hacer la suma total
+    if (members[i].votes_against_party_pct == undefined){members[i].votes_against_party_pct=0;}
+    chamber_least_loyalty[i].votes=members[i].votes_against_party_pct;
+    maxAgainstVotes= maxAgainstVotes+members[i].votes_against_party_pct;
+   
+    chamber_most_loyalty[i]=new Object();
+    chamber_most_loyalty[i].name=members[i].last_name;
+    if (members[i].votes_with_party_pct == undefined){members[i].votes_with_party_pct=0;}
+    chamber_least_loyalty[i].votes=members[i].votes_with_party_pct;
+    chamber_most_loyalty[i].votes=members[i].votes_with_party_pct;
+    maxWithVotes= maxWithVotes+members[i].votes_with_party_pct;
+  }
+   
+  // calculamos el % de missed
+  totalmissed=totalDemocratMissed + totalRepublicanMissed + totalIndependentMissed;
+  chamber_missed.Democrat=((totalDemocratMissed*100)/totalmissed).toFixed(2);    // ponemos el valor en el objecto y lo rendondeamos
+  chamber_missed.Republican=((totalRepublicanMissed*100)/totalmissed).toFixed(2) ;
+  chamber_missed.Independent=((totalIndependentMissed*100)/totalmissed).toFixed(2) ;
+
+  //  calculamos el % de Voted with Party , si es 0 tenemos que poner N/A
+  totalLoyalty=totalDemocratLoyalty + totalRepublicanLoyalty + totalIndepedentLoyalty;
+  if (totalDemocratLoyalty>0){
+    chamber_loyalty.Democrat=((totalDemocratLoyalty*100)/totalLoyalty).toFixed(2);
+    }else{chamber_loyalty.Democrat='N/A'}
+  if (totalRepublicanLoyalty>0){
+    chamber_loyalty.Republican=((totalRepublicanLoyalty*100)/totalLoyalty).toFixed(2);
+    }else{chamber_loyalty.Republican='N/A'} 
+  if (totalIndepedentLoyalty>0){
+    chamber_loyalty.Independent=((totalIndepedentLoyalty*100)/totalLoyalty).toFixed(2);
+    }else{chamber_loyalty.Independent='N/A'}  
+
+  // calculamos las listas de LEAST Y MOST
+
+  // LEAST: ordenamos descendente  y eliminamos los elementos null y los 0 con filter, del total solo mostrar el 10%
+  chamber_least_missed=((chamber_least_missed.sort(function(a,b){return b.votes-a.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0); 
+  chamber_least_missed=chamber_least_missed.slice(0,Math.round(chamber_least_missed.length/10)); 
+
+  chamber_least_loyalty=((chamber_least_loyalty.sort(function(a,b){return b.votes-a.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0); 
+  chamber_least_loyalty=chamber_least_loyalty.slice(0,Math.round(chamber_least_loyalty.length/10));
  
 
-  // calculamos el % y lo guardamos en nuestro array missed
-  for ( let i=0;i<missedVotes.length;i++){
-    missed[i]=((missedVotes[i]*100)/maxMissedVotes).toFixed(2);
+  // MOST: ordenamos ascendente  y eliminamos los elementos null y los 0 con filter, del total solo mostrar el 10%
+  chamber_most_missed=((chamber_most_missed.sort(function(a,b){return a.votes-b.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0);
+  chamber_most_missed= chamber_most_missed.slice(0,Math.round(chamber_most_missed.length/10)); 
+  chamber_most_loyalty=((chamber_most_loyalty.sort(function(a,b){return a.votes-b.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0);
+  chamber_most_loyalty= chamber_most_loyalty.slice(0,Math.round(chamber_most_loyalty.length/10)); 
+ 
+   let maxItem=chamber_least_missed.length; // podria ser cualquiera pq tienen las 2 la misma longitud
+ 
+  // calculamos el % de cada uno y creamos una nueva propiedad
+  for (let i=0;i<maxItem;i++){
+    chamber_least_missed[i].votes_percentage=new Object();
+    chamber_least_missed[i].votes_percentage=(chamber_least_missed[i].votes*100/maxMissedVotes).toFixed(2)
+    chamber_most_missed[i].votes_percentage=new Object();
+    chamber_most_missed[i].votes_percentage=(chamber_most_missed[i].votes*100/maxMissedVotes).toFixed(2)
   }
-
-  // ponemos los resultados de nuestros arrays en los valores del objeto
-  if (datos.results[0].chamber=="Senate"){
-    datos.senate.statistics.least_votes=missedVotes;
-    datos.senate.statistics.least_missed=missed;
-    datos.senate.statistics.least_names=names;
-  }else{
-    datos.house.statistics.least_votes=missedVotes;
-    datos.house.statistics.least_missed=missed;
-    datos.house.statistics.least_names=names;
-  } 
+  
+  for (let i=0;i<chamber_least_loyalty.length;i++){
+    chamber_least_loyalty[i].votes_percentage=new Object();
+    chamber_least_loyalty[i].votes_percentage=(chamber_least_loyalty[i].votes*100/maxAgainstVotes).toFixed(2)
+    chamber_most_loyalty[i].votes_percentage=new Object();
+    chamber_most_loyalty[i].votes_percentage=(chamber_most_loyalty[i].votes*100/maxWithVotes).toFixed(2)
+  }
     
-} 
+   // ponemos los resultados en los valores del objeto
+  datos[chamber].statistics.least_missed=chamber_least_missed;
+  datos[chamber].statistics.most_missed=chamber_most_missed; 
+  datos[chamber].statistics.least_loyalty=chamber_least_loyalty;
+  datos[chamber].statistics.most_loyalty=chamber_most_loyalty; 
 
 
-// función que crea la tabla con los datos del objecto
-function makeLeastRows(datos){
-  const leastSenate=datos.senate.statistics.least_votes; 
-  const leastSenateMissed=datos.senate.statistics.least_missed;
-  const leastSenateNames=datos.senate.statistics.least_names;
-  const leastHouse=datos.house.statistics.least_votes;
-  const leastHouseMissed=datos.house.statistics.least_missed;
-  const leastHouseNames=datos.house.statistics.least_names;
+  console.log('datos despues del calcstadistic',datos)
+}
 
+// función creamos la tabla Senate/House at a Glance Attendance
+function makeMissedVoteRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  const chamber_counts=datos[chamber].statistics.counts;
+  const chamber_missed=datos[chamber].statistics.missed;
+  const party=Object.keys(chamber_counts);
+  const numberOfReps=Object.values(chamber_counts);
+  const voted=Object.values(chamber_missed);
   let contenido=''
-
-  if (datos.results[0].chamber=="Senate"){ //hemos elegido Senate
-    for(let i=0;i<leastSenate.length;i++){
-      contenido+= `<tr>
-      <td>${leastSenateNames[i]}</td>
-      <td>${leastSenate[i]}</td>
-      <td>${leastSenateMissed[i]}</td>
-      </tr>`
-    }
-  }else{// hemos elegido House
-    for(let i=0;i<leastHouse.length;i++){
-      contenido+= `<tr>
-      <td>${leastHouseNames[i]}</td>
-      <td>${leastHouse[i]}</td>
-      <td>${leastHouseMissed[i]}</td>
-      </tr>`
-    }  
+ 
+  for(let i=0;i<3;i++){
+    contenido+= `<tr>
+    <td>${party[i]}</td>
+    <td>${numberOfReps[i]}</td>
+    <td>${voted[i]}</td>
+    </tr>`
   }
   return contenido
 } 
 
+// función que crea la tabla Least Engaged 
+function makeLeastMissedRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  let chamber_least_missed=datos[chamber].statistics.least_missed
+  let contenido=''
+  for(let i=0;i<chamber_least_missed.length;i++){
+    contenido+= `<tr>
+    <td>${chamber_least_missed[i].name}</td>
+    <td>${chamber_least_missed[i].votes}</td>
+    <td>${chamber_least_missed[i].votes_percentage}</td>
+    </tr>`
+  }
+  return contenido
+} 
+
+// función que crea la tabla Most Engaged
+function makeMostMissedRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  let chamber_most_missed=datos[chamber].statistics.most_missed
+  let contenido=''
+  for(let i=0;i<chamber_most_missed.length;i++){
+    contenido+= `<tr>
+    <td>${chamber_most_missed[i].name}</td>
+    <td>${chamber_most_missed[i].votes}</td>
+    <td>${chamber_most_missed[i].votes_percentage}</td>
+    </tr>`
+  }
+  return contenido
+} 
+
+// función creamos la tabla Senate/House at a Glance Attendance
+function makeLoyalRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  const chamber_counts=datos[chamber].statistics.counts;
+  const chamber_loyalty=datos[chamber].statistics.loyalty;
+  const party=Object.keys(chamber_counts);
+  const numberOfReps=Object.values(chamber_counts);
+  const loyalty=Object.values(chamber_loyalty);
+ 
+  let contenido=''
+ 
+  for(let i=0;i<3;i++){
+    contenido+= `<tr>
+    <td>${party[i]}</td>
+    <td>${numberOfReps[i]}</td>
+    <td>${loyalty[i]}<td>
+    </tr>`
+  }
+
+  return contenido
+} 
+
+// función que crea la tabla Least Loyal 
+function makeLeastLoyalRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  let chamber_least_loyalty=datos[chamber].statistics.least_loyalty
+  let contenido=''
+  for(let i=0;i<chamber_least_loyalty.length;i++){
+    contenido+= `<tr>
+    <td>${chamber_least_loyalty[i].name}</td>
+    <td>${chamber_least_loyalty[i].votes}</td>
+    <td>${chamber_least_loyalty[i].votes_percentage}</td>
+    </tr>`
+  }
+  return contenido
+} 
+
+// función que crea la tabla Most Loyal 
+function makeMostLoyalRows(datos){
+  let chamber = (datos.results[0].chamber).toLowerCase();
+  let chamber_most_loyalty=datos[chamber].statistics.most_loyalty
+  let contenido=''
+  for(let i=0;i<chamber_most_loyalty.length;i++){
+    contenido+= `<tr>
+    <td>${chamber_most_loyalty[i].name}</td>
+    <td>${chamber_most_loyalty[i].votes}</td>
+    <td>${chamber_most_loyalty[i].votes_percentage}</td>
+    </tr>`
+  }
+  return contenido
+
+}
+
+
 // Exportar las funciones para que puedan ser utilizadas en index.html
-export {fetchJson,makeStatesMenu,makeMemberRows,calcStatistics,makeCountRows,makeMissedVoteRows,leastEngaged,makeLeastRows};
+export {fetchJson,makeStatesMenu,makeMemberRows,calcStatistics,makeMissedVoteRows,makeLeastMissedRows,makeMostMissedRows,makeLoyalRows,makeLeastLoyalRows,makeMostLoyalRows};
 

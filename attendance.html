@@ -143,7 +143,7 @@
           <th>% Missed</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tableMost">
         <tr><!-- 1ª fila -->
           <td></td>
           <td></td>
@@ -168,7 +168,7 @@
     </script> 
 
     <script type="module">
-      import {fetchJson,calcStatistics,makeCountRows,makeMissedVoteRows,leastEngaged,makeLeastRows} from './scripts/html.js';
+      import {fetchJson,calcStatistics,makeMissedVoteRows,makeLeastMissedRows,makeMostMissedRows} from './scripts/html.js';
 
       activeCurrentLink()
       // función para activar la página en la que estamos//
@@ -202,11 +202,10 @@
              
       fetchJson(fileJson)
       .then((datos)=>{
-        calcStatistics (datos); // creamos los nuevos objetos y guardamos los valores
-        makeMissedVoteRows(datos); // calculamos los % missedVotes y guardamos el rdo en los objectos
-        leastEngaged(datos); // calculamos los miembros leastEngaged y guardamos el rdo en los objetos
-        document.querySelector('#myTableAttendance').innerHTML=makeCountRows(datos) // ponemos los datos que nos devuelve en la tabla 
-        document.querySelector('#tableLeast').innerHTML=makeLeastRows(datos) 
+        calcStatistics (datos); // creamos los nuevos objetos y todas las estadisticas
+        document.querySelector('#myTableAttendance').innerHTML=makeMissedVoteRows(datos) 
+        document.querySelector('#tableLeast').innerHTML=makeLeastMissedRows(datos) 
+        document.querySelector('#tableMost').innerHTML=makeMostMissedRows(datos) 
       })
     
      
