@@ -205,26 +205,24 @@ function calcStatistics (datos)
       totalIndepedentLoyalty = totalIndepedentLoyalty+(members[i].votes_with_party_pct);
     }
     // creamos las listas LEAST Y MOST ATTENDANCE
-    create_Least_Most_Members_Attendance(i,members,chamber_least_missed,chamber_most_missed)
+   
+    createLeastMostMembersAttendance(i,members,chamber_least_missed,chamber_most_missed)
+   
     maxMissedVotes= maxMissedVotes+members[i].missed_votes;
     // creamos las listas  LEAST Y MOST LOYALTY
-    create_Least_Most_Members_Loyalty(i,members,chamber_least_loyalty,chamber_most_loyalty)
+    createLeastMostMembersLoyalty(i,members,chamber_least_loyalty,chamber_most_loyalty)
     maxWithVotes= maxWithVotes+members[i].votes_with_party_pct;
     maxAgainstVotes= maxAgainstVotes+members[i].votes_against_party_pct;
   }
 
   // calculamos el % de la primera tabla tanto el Attendance como en Loyalty
-  create_Column_Voted_with_Party_Attendance(chamber_missed,totalDemocratMissed,totalRepublicanMissed,totalIndependentMissed);
-  create_Column_Voted_with_Party_Loyalty(chamber_loyalty,totalDemocratLoyalty,totalRepublicanLoyalty,totalIndepedentLoyalty);
+  createColumnVotedwithPartyAttendance(chamber_missed,totalDemocratMissed,totalRepublicanMissed,totalIndependentMissed);
+  createColumnVotedwithPartyLoyalty(chamber_loyalty,totalDemocratLoyalty,totalRepublicanLoyalty,totalIndepedentLoyalty);
   // ordenamos las listas de nombres para crear las tablas LEAST y MOST tanto para Attendance como para Loyalty
   // pongo el maximo en una variable para asi poder reutilizar la funcion. Es 10 pq muestra el 10%
   let maxitemsToShow=10;
-  console.log('longitud de la lista',chamber_least_missed)
-  console.log('maxitems %',maxitemsToShow);
-  order_descending_filter_and_showNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxAgainstVotes,maxitemsToShow);
-  order_ascending_filter_and_showNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxWithVotes,maxitemsToShow);
-  console.log('datos despues del calcstadistic',datos)
-  console.log('longitud final para mostrar',datos[chamber].statistics.least_missed)
+  orderDescendingFilterAndShowNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxAgainstVotes,maxitemsToShow);
+  orderAscendingFilterAndShowNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxWithVotes,maxitemsToShow);
 }
 
 // función que guarda los datos de las columnas " Number of Reps" en los objetos- tanto de Attendance como Loyalty
@@ -248,37 +246,38 @@ function countMembers(members,chamber,chamber_counts,max){
 }
 
 // función que guarda los datos de las columnas " Name y Number of Missed Votes" en los objetos- 
-function create_Least_Most_Members_Attendance(i,members,chamber_least_missed,chamber_most_missed){
-  chamber_least_missed[i]=new Object();
-  chamber_least_missed[i].name=members[i].last_name;
-  chamber_least_missed[i].votes=members[i].missed_votes;
-  chamber_most_missed[i]=new Object();
-  chamber_most_missed[i].name=members[i].last_name;
-  chamber_most_missed[i].votes=members[i].missed_votes;
- }
+function createLeastMostMembersAttendance(i,members,chamber_least_missed,chamber_most_missed){
+  chamber_least_missed[i]={
+    name:members[i].last_name,
+    votes:members[i].missed_votes
+  };
+
+  chamber_most_missed[i]={
+    name:members[i].last_name,
+    votes:members[i].missed_votes
+  };
+
+}
 
 // función que guarda los datos de las columnas " Name y Number Party Votes" en Loyalty 
-function create_Least_Most_Members_Loyalty(i,members,chamber_least_loyalty,chamber_most_loyalty){
-  chamber_least_loyalty[i]=new Object();
-  chamber_least_loyalty[i].name=members[i].last_name;
+function createLeastMostMembersLoyalty(i,members,chamber_least_loyalty,chamber_most_loyalty){
+   
   // cuando el valor es undefined, le ponemos el valor 0 para que se pueda hacer la suma total
-  if (members[i].votes_against_party_pct == undefined){
-    members[i].votes_against_party_pct=0;
+  if (members[i].votes_against_party_pct == undefined){members[i].votes_against_party_pct=0;}
+  chamber_least_loyalty[i]={
+    name:members[i].last_name,
+    votes:members[i].votes_against_party_pct
   }
-  chamber_least_loyalty[i].votes=members[i].votes_against_party_pct;
-  
-  chamber_most_loyalty[i]=new Object();
-  chamber_most_loyalty[i].name=members[i].last_name;
-  if (members[i].votes_with_party_pct == undefined){
-    members[i].votes_with_party_pct=0;
-  }
-  chamber_least_loyalty[i].votes=members[i].votes_with_party_pct;
-  chamber_most_loyalty[i].votes=members[i].votes_with_party_pct;
- 
+
+  //if (members[i].votes_with_party_pct == undefined){members[i].votes_with_party_pct=0;}
+  chamber_most_loyalty[i]={
+    name:members[i].last_name,
+    votes:members[i].votes_with_party_pct
+  };
 }
 
 // función que calcula los datos de la columna " % Voted with Party en Attendance" 
-function create_Column_Voted_with_Party_Attendance(chamber_missed,totalDemocratMissed,totalRepublicanMissed,totalIndependentMissed){
+function createColumnVotedwithPartyAttendance(chamber_missed,totalDemocratMissed,totalRepublicanMissed,totalIndependentMissed){
   let totalmissed=0;
   totalmissed=totalDemocratMissed + totalRepublicanMissed + totalIndependentMissed;
   chamber_missed.Democrat=((totalDemocratMissed*100)/totalmissed).toFixed(2);    // ponemos el valor en el objecto y lo rendondeamos
@@ -287,7 +286,7 @@ function create_Column_Voted_with_Party_Attendance(chamber_missed,totalDemocratM
 }
 
 // función que calcula los datos de la columna " % Voted with Party en Loyalty" 
-function create_Column_Voted_with_Party_Loyalty(chamber_loyalty,totalDemocratLoyalty,totalRepublicanLoyalty,totalIndepedentLoyalty){
+function createColumnVotedwithPartyLoyalty(chamber_loyalty,totalDemocratLoyalty,totalRepublicanLoyalty,totalIndepedentLoyalty){
   let totalLoyalty=0;
   // si no hay valor tiene que mostrar en la tabla 'N/A'
   totalLoyalty=totalDemocratLoyalty + totalRepublicanLoyalty + totalIndepedentLoyalty;
@@ -303,7 +302,7 @@ function create_Column_Voted_with_Party_Loyalty(chamber_loyalty,totalDemocratLoy
 }
 
 // función que ordena descendente,elimina los elementos null y los 0 y muestra el % de items segun el parametro maxitemsToShow
-function order_descending_filter_and_showNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxAgainstVotes,maxitemsToShow){
+function orderDescendingFilterAndShowNumItems(datos,chamber,chamber_least_missed,chamber_least_loyalty,maxMissedVotes,maxAgainstVotes,maxitemsToShow){
   chamber_least_missed=((chamber_least_missed.sort(function(a,b){return b.votes-a.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0); 
   chamber_least_missed=chamber_least_missed.slice(0,Math.round((chamber_least_missed.length*maxitemsToShow)/100));
   
@@ -325,7 +324,7 @@ function order_descending_filter_and_showNumItems(datos,chamber,chamber_least_mi
 }
 
 // función que ordena ascendente,elimina los elementos null y los 0 y muestra el % de items segun el parametro maxitemsToShow
-function order_ascending_filter_and_showNumItems(datos,chamber,chamber_most_missed,chamber_most_loyalty,maxMissedVotes,maxWithVotes,maxitemsToShow){
+function orderAscendingFilterAndShowNumItems(datos,chamber,chamber_most_missed,chamber_most_loyalty,maxMissedVotes,maxWithVotes,maxitemsToShow){
   chamber_most_missed=((chamber_most_missed.sort(function(a,b){return a.votes-b.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0); 
   chamber_most_missed=chamber_most_missed.slice(0,Math.round((chamber_most_missed.length*maxitemsToShow)/100));
   chamber_most_loyalty=((chamber_most_loyalty.sort(function(a,b){return a.votes-b.votes})).filter(element => element.votes != null)).filter(element => element.votes > 0); 
@@ -336,12 +335,14 @@ function order_ascending_filter_and_showNumItems(datos,chamber,chamber_most_miss
     chamber_most_missed[i].votes_percentage=new Object();
     chamber_most_missed[i].votes_percentage=(chamber_most_missed[i].votes*100/maxMissedVotes).toFixed(2)
   }
+  
   for (let i=0;i<chamber_most_loyalty.length;i++){
    chamber_most_loyalty[i].votes_percentage=new Object();
    chamber_most_loyalty[i].votes_percentage=(chamber_most_loyalty[i].votes*100/maxWithVotes).toFixed(2)
   }
   datos[chamber].statistics.most_missed=chamber_most_missed; 
   datos[chamber].statistics.most_loyalty=chamber_most_loyalty; 
+  console.log(datos)
 }
 
 // función creamos la tabla Senate/House at a Glance Attendance
