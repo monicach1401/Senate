@@ -65,8 +65,8 @@
 </header>
 
 <body style="background-color: beige">
-  <div class="container">
-    <div id="textSenate">
+  <div class="container" id="app">
+    <div  v-if="chamber==='senate'" id="textSenate">
       <div class="row">
         <div class="col">
           <img class="img-fluid"src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>  
-    <div id="textHouse">
+    <div v-if="chamber==='house'" id="textHouse">
       <div class="row">
         <div class="col">
           <img src="/images/img_house.jpg" style="margin-top: 70px; margin-bottom:5px">
@@ -155,102 +155,10 @@
     <!-- script bootstrap --------------------------------------------------------------------->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script> 
-    
-    <script>
-     activeCurrentLink()
-
-    // función para activar la página en la que estamos//
-    function activeCurrentLink(){
-      console.log(window.location.href)
-      var element=window.document.querySelector('#navbarDropdown') // le indicamos que estamos en Congress
-      element.classList.toggle("active") 
-    }
-    
-    
-    
-
-    // ------------- Función para saber que Party esta seleccionado-----------------------------------------------------------------------------------------------------------------
-    function checkboxes_selected(){
-    const parties = {
-      democrat: 'D',
-      republican: 'R',
-      independent: 'ID'
-    }
-    let result=[];
-    if (document.querySelector('#democratFilterCheckbox').checked){  result.push(parties.democrat);  }
-    if (document.querySelector('#republicanFilterCheckbox').checked){  result.push(parties.republican);  }
-    if (document.querySelector('#independentFilterCheckbox').checked){  result.push(parties.independent);  }
-    return result;
-    }
-
-     // ------------- Función para saber que State esta seleccionado-----------------------------------------------------------------------------------------------------------------
-    function menu_selected(){
-    let state=document.getElementById("menu").value; 
-     // retorno la abreviación que es lo que se muestra en la tabla
-    return state; 
-    }
-    </script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="./scripts/app.js" type="module"></script>
   
-    <!---Función para mostrar en pantalla----------------------------------------------------------------------->  
-    <script type="module">
-    const check1=document.getElementById("democratFilterCheckbox");
-    const check2=document.getElementById("republicanFilterCheckbox");
-    const check3=document.getElementById("independentFilterCheckbox");
-    const state=document.getElementById("menu");
- 
-    import { fetchJson,makeStatesMenu,makeMemberRows} from './scripts/html.js';
 
-      
-    fetchJson("/data/states_titlecase.json")
-      .then ((datos)=>{
-        document.querySelector('#menu').innerHTML=makeStatesMenu(datos)
-     })
-
-    
-      
-    
-    // debemos saber que chamber hemos puesto en la URL
-    const params = new URL(document.location).searchParams;
-    const chamber=params.get("chamber")
-    console.log('la variable chamber es:',chamber)
-    selectChamberandChangetheText(chamber);  // llamamos a la función para saber que chamber hemos puesto
-    
-    function selectChamberandChangetheText(chamber){
-      let file='';
-      if(chamber=="house"){ // debemos coger los datos de "congress-117-house.json y ocultar texto de Senate"
-        document.querySelector('#textSenate').style.display="none";
-        file="/data/congress-117-house.json";
-      }
-      else// debemos coger los datos de "congress-117-senate.json y ocultar texto de House"
-      {
-        document.querySelector('#textHouse').style.display="none";
-        file="/data/congress-117-senate.json";
-      }
-      
-      return file; // nos devuelve el fichero que debemos pasar al fetchJson
-    }
-    
-    let fileJson=selectChamberandChangetheText(chamber)
-    console.log('el parametro que pasamos es',fileJson)
-    
-    
-    fetchJson(fileJson)
-      .then((datos)=>{
-        function filter_table(){
-        menu_selected();
-        document.querySelector('#mytable').innerHTML=makeMemberRows(datos,checkboxes_selected(),menu_selected());
-      }
-       
-      menu.addEventListener("change",filter_table)
-      check1.addEventListener("click",filter_table)
-      check2.addEventListener("click",filter_table)
-      check3.addEventListener("click",filter_table)
-      filter_table();
-     
-      })
-    
-    
-    </script>
     <footer>
       <p>&copy; 2021 TGIF | All Rights Reserved</p>
     </footer>
