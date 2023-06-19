@@ -66,7 +66,7 @@
 
 <body style="background-color: beige">
   <div class="container" id="app">
-    <div  v-if="chamber==='senate'" id="textSenate">
+    <div  v-if="chamber==='senate'" > <!--id="textSenate">-->
       <div class="row">
         <div class="col">
           <img class="img-fluid"src="/images/img_senate.jpg" style="margin-top: 70px; margin-bottom:5px" >
@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>  
-    <div v-if="chamber==='house'" id="textHouse">
+    <div  v-if="chamber==='house'" ><!--id="textHouse"-->
       <div class="row">
         <div class="col">
           <img src="/images/img_house.jpg" style="margin-top: 70px; margin-bottom:5px">
@@ -148,17 +148,39 @@
         </tr>
       </thead>
       <tbody id="mytable">
-       <!-- we create the body with "my script"-->
+     
+       <tr v-if="chamber==='senate'" v-for="member in members_senate">
+           <td>{{member.last_name}}</td>
+           <td>{{member.party}}</td>
+           <td>{{member.state}}</td>
+           <td>{{member.seniority}}</td>
+           <td>{{member.votes_with_party_pct}}</td>
+        </tr>
+        <tr v-if="chamber==='house'" v-for="member in members_house">
+          <td>{{member.last_name}}</td>
+          <td>{{member.party}}</td>
+          <td>{{member.state}}</td>
+          <td>{{member.seniority}}</td>
+          <td>{{member.votes_with_party_pct}}</td>
+       </tr>
+        
       </tbody>
+      
+
+
     </table>
+  
+  </div>
+  
+    
  
     <!-- script bootstrap --------------------------------------------------------------------->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script> 
+   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script> -->
     <script src="https://unpkg.com/vue@next"></script>
     <script src="./scripts/app.js" type="module"></script>
-  
-
+   
+     
     <footer>
       <p>&copy; 2021 TGIF | All Rights Reserved</p>
     </footer>
